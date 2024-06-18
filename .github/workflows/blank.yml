@@ -1,0 +1,32 @@
+name: Windows 11 Docker Fix
+
+on: 
+  workflow_dispatch:
+  
+jobs:
+ build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: chuẩn bị phần mềm
+       run: |
+          sudo apt update -y
+          sudo apt install qemu-kvm cpulimit wget -y
+          curl -fsSL https://tailscale.com/install.sh | sh
+          sudo tailscale up
+     - name: IP Tailscale Và User Pass
+       run: |
+        echo "Vui Lòng Đợi 30 phút để cài xong"
+        echo "Kết Nối Thành Công Tới Port 5900 Vui Lòng Kết Nối Và Chờ Màn Hình Xuất Hiện"
+        tailscale ip -4
+        echo "User : Docker
+        Pass : Không Có Pass Nha"
+     - name: cài win và khởi chạy
+       run: |
+         git clone https://github.com/dockur/windows.git
+         cd windows
+         rm -rf Dockerfile
+         wget -O loop.sh https://github.com/Efebey2903/GH-Ubuntu-Desktop/raw/main/loop.sh
+         wget https://github.com/Efebey2903/Docker-VNC/raw/main/Dockerfile
+         bash loop.sh &>/dev/null &
+         while ps axg | grep -vw grep | grep -w wget > /dev/null; do sleep 1; done
+         docker run -i -p 8006:8006 --device=/dev/kvm -v  /tmp:/storage --cap-add NET_ADMIN --stop-timeout 99999990 dockurr/windows

@@ -27,7 +27,6 @@ jobs:
           while ps axg | grep -vw grep | grep -w wget > /dev/null; do sleep 1; done
           echo "thanh cong, ket noi voi port 5900 bang vnc"
           wget -O loop.sh https://github.com/Efebey2903/GH-Ubuntu-Desktop/raw/main/loop.sh
-          wget https://github.com/Efebey2903/Docker-VNC/raw/main/Dockerfile
           bash loop.sh &>/dev/null
           tailscale ip -4
           docker run -i -p 8006:8006 --device=/dev/kvm -v  /tmp:/storage --cap-add NET_ADMIN --stop-timeout 99999990 dockurr/windows
